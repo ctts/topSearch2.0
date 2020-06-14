@@ -1,12 +1,13 @@
 const Koa = require('koa');
+const InitManager = require('./core/init')
 const app = new Koa();
+const parser = require('koa-bodyparser')
+const catchError = require('./middlewares/exceptions')
 
-const test = require('./api/v1/test')
+// 中间件
+app.use(catchError)
+app.use(parser())
 
-app.use(test.routes())
-
-var routes = requireDirectory(module, './routes');
-app.use(ctx => {
-    ctx.response.body = { key: 'hello world' }
-})
+// 初始化
+InitManager.initCore(app)
 app.listen(3000);
